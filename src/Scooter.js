@@ -2,7 +2,7 @@ class Scooter {
   static nextSerial = 1;
 
   constructor(station) {
-    this.station = station;
+    this.station = station; // null if rented
     this.user = null; // null if docked
     this.serial = Scooter.nextSerial;
     Scooter.nextSerial++;
@@ -11,15 +11,15 @@ class Scooter {
   }
 
   rent() {
-    if (this.charge > 20 && !this.isBroken) {
-      return true;
+    if (this.charge <= 20 && this.isBroken) {
+      throw new Error("scooter needs to be charged and repaired");
+    } else if (this.charge <= 20) {
+      throw new Error("scooter needs to be charged");
+    } else if (this.isBroken) {
+      throw new Error("scooter needs repair");
     } else {
-      if (this.charge <= 20) {
-        throw new Error("scooter needs to be charged");
-      }
-      if (this.isBroken) {
-        throw new Error("scooter needs repair");
-      }
+      this.station = null;
+      return true; //sets user and removes station in ScooterApp
     }
   }
 

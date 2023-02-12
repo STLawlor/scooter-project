@@ -73,7 +73,7 @@ describe("ScooterApp user methods", () => {
     it("throws error if username is incorrect", () => {
       expect(() => {
         scooterApp.loginUser("ScootLion", newUser.password);
-      }).toThrowError();
+      }).toThrowError("Username is incorrect");
     });
   });
 
@@ -153,7 +153,9 @@ describe("ScooterApp scooter methods", () => {
     });
 
     it("console.logs when the scooter is docked", () => {
-      expect(logSpy).toHaveBeenCalledWith(`scooter #${newScooter.serial} is docked`);
+      expect(logSpy).toHaveBeenCalledWith(
+        `scooter #${newScooter.serial} is docked`
+      );
     });
 
     it("throws error if scooter is already docked", () => {
@@ -168,6 +170,26 @@ describe("ScooterApp scooter methods", () => {
       expect(() => {
         scooterApp.dockScooter(newScooter, "Deansgate");
       }).toThrowError("no such station");
+    });
+  });
+
+  describe("print()", () => {
+    it("console.logs each station and the number of scooters", () => {
+      scooterApp.print();
+      expect(logSpy).toHaveBeenCalledWith("Piccadily");
+      expect(logSpy).toHaveBeenCalledWith(
+        `${scooterApp.stations.Piccadily.length} scooters at Piccadily station`
+      );
+    });
+
+    it("console.logs each registered users", () => {
+      newUser2 = scooterApp.registerUser("newUser2", "password2", 23);
+      scooterApp.print();
+      expect(logSpy).toHaveBeenCalledWith(
+        `Registered User: ${
+          scooterApp.registeredUsers[newUser2.username].username
+        }`
+      );
     });
   });
 });

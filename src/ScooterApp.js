@@ -33,10 +33,8 @@ class ScooterApp {
   }
 
   loginUser(username, password) {
-    let userFound = false;
     for (const user in this.registeredUsers) {
       if (user === username) {
-        userFound = true;
         this.registeredUsers[user].login(password);
         console.log(`user ${username} has been logged in`);
 
@@ -44,9 +42,7 @@ class ScooterApp {
       }
     }
 
-    if (!userFound) {
-      throw new Error("Username is incorrect");
-    }
+    throw new Error("Username is incorrect");
   }
 
   logoutUser(username) {
@@ -82,15 +78,12 @@ class ScooterApp {
       // check current stations array for scooter
       for (let i = 0; i < this.stations[stationName].length; i++) {
         if (this.stations[stationName][i] === scooter) {
-          let scooterAvialable = scooter.rent();
+          scooter.rent();
+          this.stations[stationName].splice(i, 1);
+          scooter.user = user;
+          console.log(`scooter #${scooter.serial} is rented`);
 
-          if (scooterAvialable) {
-            this.stations[stationName].splice(i, 1);
-            scooter.user = user;
-            console.log(`scooter #${scooter.serial} is rented`);
-
-            return;
-          }
+          return;
         }
       }
     }
@@ -99,42 +92,33 @@ class ScooterApp {
   }
 
   dockScooter(scooter, station) {
-    let stationFound = false;
-    let scooterFound = false;
-
     for (const stationName in this.stations) {
-      // check if station exists
+      // first check if station exists
       if (stationName === station) {
-        stationFound = true;
-
-        // check if stations array has scooter already
+        // then check if stations array has scooter already
         for (let i = 0; i < this.stations[station].length; i++) {
-          // if scooter exists in array throw error
           if (this.stations[station][i] === scooter) {
-            scooterFound = true;
             throw new Error(
               `scooter #${scooter.serial} is already at ${station}`
             );
           }
         }
 
-        if (!scooterFound) {
-          scooter.dock(station);
-          this.stations[station].push(scooter);
-          console.log(`scooter #${scooter.serial} is docked`);
-          return;
-        }
+        // if scooter is not found then dock scooter
+        scooter.dock(station);
+        this.stations[station].push(scooter);
+        console.log(`scooter #${scooter.serial} is docked`);
+
+        return;
       }
     }
 
-    if (!stationFound) {
-      throw new Error("no such station");
-    }
+    throw new Error("no such station");
   }
 
   print() {
     for (const user in this.registeredUsers) {
-      console.log(`Registered User: ${this.registeredUsers[user]}`);
+      console.log(`Registered User: ${this.registeredUsers[user].username}`);
     }
 
     for (const station in this.stations) {

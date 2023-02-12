@@ -40,13 +40,16 @@ describe("Scooter", () => {
   });
 
   describe("rent()", () => {
-    it("returns true if scooter is charged and not broken", () => {
-      let scooterAvialable = scooter1.rent();
-      expect(scooterAvialable).toBe(true);
+    it("throws errors if scooter is broken and charge is below 21", () => {
+      scooter1.charge = 20;
+      scooter1.isBroken = true;
+      expect(() => {
+        scooter1.rent();
+      }).toThrowError("scooter needs to be charged and repaired");
     });
 
     it("throws error if scooters charge is below 21", () => {
-      scooter1.charge = 20;
+      scooter1.isBroken = false;
       expect(() => {
         scooter1.rent();
       }).toThrowError("scooter needs to be charged");
@@ -59,6 +62,16 @@ describe("Scooter", () => {
         scooter1.rent();
       }).toThrowError("scooter needs repair");
     });
+
+    it("returns true if scooter is charged and not broken", () => {
+      scooter1.isBroken = false;
+      let scooterAvialable = scooter1.rent();
+      expect(scooterAvialable).toBe(true);
+    });
+
+    it("sets the station to null when rented", () => {
+      expect(scooter1.station).toBe(null);
+    })
   });
 
   describe("dock(station)", () => {
@@ -73,8 +86,14 @@ describe("Scooter", () => {
   });
 
   describe("async recharge()", () => {
-    it("updates the scooters charge", async () => {
+    it("updates the scooters charge by 10 if 90 or below", async () => {
       scooter1.charge = 90;
+      await scooter1.recharge();
+      expect(scooter1.charge).toBe(100);
+    });
+
+    it("updates the scooters charge to 100 if above 90", async () => {
+      scooter1.charge = 95;
       await scooter1.recharge();
       expect(scooter1.charge).toBe(100);
     });
