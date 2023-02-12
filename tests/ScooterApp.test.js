@@ -46,7 +46,7 @@ describe("ScooterApp user methods", () => {
           newUser.password,
           newUser.age
         );
-      }).toThrowError();
+      }).toThrowError(`username ${newUser.username} is already in use`);
     });
 
     it("adds a new user to registeredUsers", () => {
@@ -56,14 +56,18 @@ describe("ScooterApp user methods", () => {
 
     it("console.logs when the user is registered", () => {
       scooterApp.registerUser("ScootyDoobyDoo", "jinkies", 32);
-      expect(logSpy).toHaveBeenCalledWith("user has been registered");
+      expect(logSpy).toHaveBeenCalledWith(
+        "user ScootyDoobyDoo has been registered"
+      );
     });
   });
 
   describe("loginUser()", () => {
     it("console.logs if the username and password are correct", () => {
       scooterApp.loginUser(newUser.username, newUser.password);
-      expect(logSpy).toHaveBeenCalledWith("user has been logged in");
+      expect(logSpy).toHaveBeenCalledWith(
+        `user ${newUser.username} has been logged in`
+      );
     });
 
     it("throws error if username is incorrect", () => {
@@ -76,7 +80,9 @@ describe("ScooterApp user methods", () => {
   describe("logoutUser()", () => {
     it("console.logs if the username is correct", () => {
       scooterApp.logoutUser(newUser.username);
-      expect(logSpy).toHaveBeenCalledWith("user is logged out");
+      expect(logSpy).toHaveBeenCalledWith(
+        `user ${newUser.username} is logged out`
+      );
     });
 
     it("throws error if username is incorrect", () => {
@@ -103,8 +109,10 @@ describe("ScooterApp scooter methods", () => {
     });
 
     it("console.logs if the scooter is created", () => {
-      scooterApp.createScooter("Victoria");
-      expect(logSpy).toHaveBeenCalledWith("created new scooter");
+      let newScooter2 = scooterApp.createScooter("Victoria");
+      expect(logSpy).toHaveBeenCalledWith(
+        `created new scooter #${newScooter2.serial}`
+      );
     });
 
     it("throws error if station is incorrect", () => {
@@ -125,14 +133,16 @@ describe("ScooterApp scooter methods", () => {
     });
 
     it("console.logs when the scooter is rented", () => {
-      expect(logSpy).toHaveBeenCalledWith("scooter is rented");
+      expect(logSpy).toHaveBeenCalledWith(
+        `scooter #${newScooter.serial} is rented`
+      );
     });
 
     it("throws error if scooter is already rented", () => {
       expect(() => {
         scooterApp.rentScooter(newScooter, newUser);
         scooterApp.rentScooter(newScooter, newUser);
-      }).toThrowError("scooter already rented");
+      }).toThrowError(`scooter #${newScooter.serial} already rented`);
     });
   });
 
@@ -143,13 +153,15 @@ describe("ScooterApp scooter methods", () => {
     });
 
     it("console.logs when the scooter is docked", () => {
-      expect(logSpy).toHaveBeenCalledWith("scooter is docked");
+      expect(logSpy).toHaveBeenCalledWith(`scooter #${newScooter.serial} is docked`);
     });
 
     it("throws error if scooter is already docked", () => {
       expect(() => {
-        scooterApp.dockScooter(newScooter, "Oxford");
-      }).toThrowError("scooter already at station");
+        scooterApp.dockScooter(newScooter, newScooter.station);
+      }).toThrowError(
+        `scooter #${newScooter.serial} is already at ${newScooter.station}`
+      );
     });
 
     it("throws error if station is not found", () => {

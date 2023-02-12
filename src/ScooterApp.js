@@ -17,7 +17,7 @@ class ScooterApp {
     }
     for (const user in this.registeredUsers) {
       if (user === username) {
-        throw new Error("already registered");
+        throw new Error(`username ${username} is already in use`);
       }
     }
 
@@ -27,7 +27,7 @@ class ScooterApp {
       age: age,
     });
     this.registeredUsers[username] = newUser;
-    console.log("user has been registered");
+    console.log(`user ${newUser.username} has been registered`);
 
     return newUser;
   }
@@ -38,7 +38,7 @@ class ScooterApp {
       if (user === username) {
         userFound = true;
         this.registeredUsers[user].login(password);
-        console.log("user has been logged in");
+        console.log(`user ${username} has been logged in`);
 
         return;
       }
@@ -53,7 +53,7 @@ class ScooterApp {
     for (const user in this.registeredUsers) {
       if (user === username) {
         this.registeredUsers[user].logout();
-        console.log("user is logged out");
+        console.log(`user ${username} is logged out`);
 
         return;
       }
@@ -67,7 +67,7 @@ class ScooterApp {
       if (stationName === station) {
         let newScooter = new Scooter(station);
         this.stations[station].push(newScooter);
-        console.log("created new scooter");
+        console.log(`created new scooter #${newScooter.serial}`);
 
         return newScooter;
       }
@@ -87,7 +87,7 @@ class ScooterApp {
           if (scooterAvialable) {
             this.stations[stationName].splice(i, 1);
             scooter.user = user;
-            console.log("scooter is rented");
+            console.log(`scooter #${scooter.serial} is rented`);
 
             return;
           }
@@ -95,7 +95,7 @@ class ScooterApp {
       }
     }
 
-    throw new Error("scooter already rented");
+    throw new Error(`scooter #${scooter.serial} already rented`);
   }
 
   dockScooter(scooter, station) {
@@ -112,14 +112,16 @@ class ScooterApp {
           // if scooter exists in array throw error
           if (this.stations[station][i] === scooter) {
             scooterFound = true;
-            throw new Error("scooter already at station");
+            throw new Error(
+              `scooter #${scooter.serial} is already at ${station}`
+            );
           }
         }
 
         if (!scooterFound) {
           scooter.dock(station);
           this.stations[station].push(scooter);
-          console.log("scooter is docked");
+          console.log(`scooter #${scooter.serial} is docked`);
           return;
         }
       }
