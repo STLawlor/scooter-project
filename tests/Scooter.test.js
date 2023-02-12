@@ -29,13 +29,13 @@ describe("Scooter", () => {
       expect(scooter1.isBroken).toBe(false);
     });
 
-    it("initialises the serialNum property", () => {
-      let serialNumType = typeof scooter1.serialNum;
-      expect(serialNumType).toBe("number");
+    it("initialises the serial property", () => {
+      let serialType = typeof scooter1.serial;
+      expect(serialType).toBe("number");
     });
 
     it("increments the nextSerial static property", () => {
-      expect(scooter2.serialNum).toBe(scooter1.serialNum + 1);
+      expect(scooter2.serial).toBe(scooter1.serial + 1);
     });
   });
 

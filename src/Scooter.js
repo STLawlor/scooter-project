@@ -4,7 +4,7 @@ class Scooter {
   constructor(station) {
     this.station = station;
     this.user = null; // null if docked
-    this.serialNum = Scooter.nextSerial;
+    this.serial = Scooter.nextSerial;
     Scooter.nextSerial++;
     this.charge = 100;
     this.isBroken = false;

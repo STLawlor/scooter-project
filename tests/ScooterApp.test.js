@@ -124,8 +124,13 @@ describe("ScooterApp scooter methods", () => {
       expect(newScooter.user).toBe(newUser);
     });
 
+    it("console.logs when the scooter is rented", () => {
+      expect(logSpy).toHaveBeenCalledWith("scooter is rented");
+    });
+
     it("throws error if scooter is already rented", () => {
       expect(() => {
+        scooterApp.rentScooter(newScooter, newUser);
         scooterApp.rentScooter(newScooter, newUser);
       }).toThrowError("scooter already rented");
     });

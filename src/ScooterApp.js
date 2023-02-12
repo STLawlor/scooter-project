@@ -4,12 +4,11 @@ const Scooter = require("./Scooter");
 class ScooterApp {
   constructor() {
     this.stations = {
-      // values = Scooter[]
       Piccadily: [],
       Victoria: [],
       Oxford: [],
     };
-    this.registeredUsers = {}; // keys are usernames, values are Users
+    this.registeredUsers = {};
   }
 
   registerUser(username, password, age) {
@@ -82,12 +81,13 @@ class ScooterApp {
     for (const stationName in this.stations) {
       // check current stations array for scooter
       for (let i = 0; i < this.stations[stationName].length; i++) {
-        if (this.stations[stationName][i].serialNum === scooter.serialNum) {
+        if (this.stations[stationName][i] === scooter) {
           let scooterAvialable = scooter.rent();
 
           if (scooterAvialable) {
             this.stations[stationName].splice(i, 1);
             scooter.user = user;
+            console.log("scooter is rented");
 
             return;
           }
@@ -143,10 +143,5 @@ class ScooterApp {
     }
   }
 }
-
-// let scooterApp = new ScooterApp();
-// let newUser = scooterApp.registerUser("user1", "password1", 21);
-
-// scooterApp.loginUser(newUser.username, newUser.password);
 
 module.exports = ScooterApp;
